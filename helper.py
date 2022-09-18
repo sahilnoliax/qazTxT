@@ -19,10 +19,9 @@
 #  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE
-
-
 import subprocess
 import datetime
+import json
 import asyncio
 import os
 import requests
@@ -33,6 +32,7 @@ import tgcrypto
 import aiofiles
 from pyrogram.types import Message
 from pyrogram import Client, filters
+from subprocess import getstatusoutput
 
 def duration(filename):
     result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
@@ -191,7 +191,7 @@ async def send_doc(bot: Client, m: Message,cc,ka,cc1,prog,count,name):
 
 async def send_vid(bot: Client, m: Message,cc,filename,thumb,name,prog):
     
-    subprocess.run(f'ffmpeg -i "{filename}" -ss 00:01:00 -vframes 1 "{filename}.jpg"', shell=True)
+    subprocess.run(f'ffmpeg -i "{filename}" -ss 00:00:12 -vframes 1 "{filename}.jpg"', shell=True)
     await prog.delete (True)
     reply = await m.reply_text(f"**Uploading ...** - `{name}`")
     try:
@@ -216,4 +216,23 @@ async def send_vid(bot: Client, m: Message,cc,filename,thumb,name,prog):
 
     os.remove(f"{filename}.jpg")
     await reply.delete (True)
+    
+def get_video_attributes(file: str):
+    """Returns video duration, width, height"""
+
+    class FFprobeAttributesError(Exception):
+        """Exception if ffmpeg fails to generate attributes"""
+
+    cmd = (
+        "ffprobe -v error -show_entries format=duration "
+        + "-of default=noprint_wrappers=1:nokey=1 "
+        + "-select_streams v:0 -show_entries stream=width,height "
+        + f" -of default=nw=1:nk=1 '{file}'"
+    )
+    res, out = getstatusoutput(cmd)
+    if res != 0:
+        raise FFprobeAttributesError(out)
+    width, height, dur = out.split("\n")
+    return (int(float(dur)), int(width), int(height))
+
     

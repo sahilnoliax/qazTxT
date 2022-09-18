@@ -21,3 +21,10 @@ yt-dlp
 pyromod==1.5
 aiohttp
 aiofiles
+asyncio
+pycurl
+humanize
+ethon==1.3.6
+cryptg
+telethon
+python-decouple

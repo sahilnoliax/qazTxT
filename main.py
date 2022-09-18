@@ -55,7 +55,7 @@ load_dotenv()
 os.makedirs("./downloads", exist_ok=True)
 API_ID = 14560088
 API_HASH = "74a2665339484da3eaaed5f4fe16da79"
-BOT_TOKEN = "5778550332:AAEay0SkomfgIf_Nd-aw4aKEgrHkvXwhH78"
+BOT_TOKEN = "5501205055:AAF-SaqB_JAUleRpry7WBwMso2sMg9k1msY"
 #NAME = "BlackOuT"
 #API_ID = os.getenv('API_ID')
 #API_HASH = os.getenv('API_HASH')
